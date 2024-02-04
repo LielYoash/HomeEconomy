@@ -4,33 +4,30 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-using Org.BouncyCastle.Asn1.Mozilla;
 
 
 namespace HomeEconomy
 {
     public class Task
     {
-        private const string ConnectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\נבו\\Source\\Repos\\HomeEconomyBack2\\HomeEconomy\\HomeEconomyDB.mdf;Integrated Security=True";
+        private const string ConnectionString = "YourConnectionStringHere"; // Replace with your actual connection string
 
-        private int id;
         private string type;
         private string description;
         private DateTime until;
-        private DateTime done;
+        private bool done;
         private int managerId;// מחלק המשימה
         private int dotaskId;// מבצע המשימה
 
 
-        public Task(int id,  string type, string description, DateTime until, DateTime done, int managerid, int dotaskid)
+        public Task(string type, string description, DateTime until, bool done, int managerid, int dotaskid)
         {
-            this.id = id;
             this.type = type;
             this.description = description;
             this.until = until;
             this.done = done;
             this.managerId = managerid;
-            this.dotaskId = dotaskid;
+            this.managerId = dotaskid;
         }
         public string Gettype()
         {
@@ -56,24 +53,26 @@ namespace HomeEconomy
         {
             this.until = date;
         }
-        public DateTime getDone()
+        public bool getDone()
         {
             return this.done;
         }
         public void setDone()
         {
-            this.done = DateTime.Now;
+            this.done = true;
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
 
-                string query = "UPDATE Tasks SET Done = GETDATE() WHERE Id = @idtask ;";
+                string query = "UPDATE Tasks SET Done = 1 WHERE Type = @Type AND TaskDescription = @TaskDescription";
 
                 try
                 {
                     using (SqlCommand command = new SqlCommand(query, connection))
                     {
-                        command.Parameters.AddWithValue("@idtask", this.id);
+                        command.Parameters.AddWithValue("@Type", this.type);
+                        command.Parameters.AddWithValue("@TaskDescription", this.description);
+
                         command.ExecuteNonQuery();
                     }
                 }
@@ -102,32 +101,40 @@ namespace HomeEconomy
         {
             this.dotaskId = dotask;
         }
-        public int getid()
+        public bool isexist()
         {
-            return this.id;
+            return true;
         }
-        public bool isexict()
+        public void updatealltask()
         {
-            bool result = false;
-
             using (SqlConnection connection = new SqlConnection(ConnectionString))
             {
                 connection.Open();
 
-                string query = "SELECT COUNT(*) FROM tasks WHERE Type = @TaskType AND Description = @TaskDescription";
-                using (SqlCommand command = new SqlCommand(query, connection))
-                {
-                    command.Parameters.AddWithValue("@TaskType", this.Gettype());
-                    command.Parameters.AddWithValue("@TaskDescription", this.GetDescription());
+                string query = "UPDATE Tasks SET UserId = @UserId, Type = @Type, Done = @Done, " +
+                               "TaskDescription = @TaskDescription, ManagerId = @ManagerId, Until = @Until";
 
-                    int count = (int)command.ExecuteScalar();
-                    result = count > 0;
+                try
+                {
+                    using (SqlCommand command = new SqlCommand(query, connection))
+                    {
+                        command.Parameters.AddWithValue("@UserId", this.dotaskId);
+                        command.Parameters.AddWithValue("@Type", this.type);
+                        command.Parameters.AddWithValue("@Done", this.done);
+                        command.Parameters.AddWithValue("@TaskDescription", this.description);
+                        command.Parameters.AddWithValue("@ManagerId", this.managerId);
+                        command.Parameters.AddWithValue("@Until", this.until);
+
+                        command.ExecuteNonQuery();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    // Log or handle the exception as needed
+                    throw new Exception("Error updating all task values in the database.", ex);
                 }
             }
-
-            return result;
         }
-       
 
     }
 }

@@ -4,15 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Data.SqlClient;
-using System.Security.Cryptography;
 
 
 namespace HomeEconomy
 {
     public class Person
     {
-        private const string ConnectionString = "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\נבו\\Source\\Repos\\HomeEconomyBack2\\HomeEconomy\\HomeEconomyDB.mdf;Integrated Security=True";
-        protected string email;
+        private const string ConnectionString = "";
+        protected string username;
         protected string firstname;
         protected string lastname;
         protected DateTime birth;
@@ -25,9 +24,9 @@ namespace HomeEconomy
             this.birth = new DateTime();
             this.mytask = new List<Task>();
         }
-        public Person(string email, string firstname, string lastname, DateTime birth)
+        public Person(string username, string firstname, string lastname, DateTime birth)
         {
-            this.email = email;
+            this.username = username;
             this.firstname = firstname;
             this.lastname = lastname;
             this.birth = birth;
@@ -37,16 +36,15 @@ namespace HomeEconomy
             {
                 connection.Open();
 
-                string getUserIdQuery = "SELECT Id FROM Users WHERE Email = @email";
+                string getUserIdQuery = "SELECT UserId FROM Users WHERE Username = @Username";
 
                 using (SqlCommand getUserIdCommand = new SqlCommand(getUserIdQuery, connection))
                 {
-
-                    getUserIdCommand.Parameters.AddWithValue("@email", this.email);
+                    getUserIdCommand.Parameters.AddWithValue("@Username", this.username);
                     int userId = Convert.ToInt32(getUserIdCommand.ExecuteScalar());
 
-                    string getTasksQuery = "SELECT Id, ResponsibleUser, Type,  Description, CreatedBy, DueDate FROM Tasks " +
-                                           "WHERE ResponsibleUser = @UserId AND DueDate > GETDATE() AND ExpiredAt is null";
+                    string getTasksQuery = "SELECT TaskId, UserId, Type, done,  TaskDescription, managerid Until FROM Tasks " +
+                                           "WHERE UserId = @UserId AND Until > GETDATE()";
 
                     using (SqlCommand getTasksCommand = new SqlCommand(getTasksQuery, connection))
                     {
@@ -56,7 +54,7 @@ namespace HomeEconomy
                         {
                             while (reader.Read())
                             {
-                                this.mytask.Add(new Task(reader.GetInt32(0),reader.GetString(2), reader.GetString(3), reader.GetDateTime(5), DateTime.MinValue, reader.GetInt32(4), reader.GetInt32(1)));
+                                this.mytask.Add(new Task(reader.GetString(2), reader.GetString(4), reader.GetDateTime(5), reader.GetBoolean(3), reader.GetInt32(5), reader.GetInt32(1)));
 
                             }
                         }
@@ -64,13 +62,13 @@ namespace HomeEconomy
                 }
             }
         }
-        public string GetEmail()
+        public string GetUsername()
         {
-            return this.email;
+            return this.username;
         }
-        public void SetEmail(string email)
+        public void SetUserName(string username)
         {
-            this.email = email;
+            this.username = username;
         }
         public string GetFirstname()
         {
@@ -119,10 +117,6 @@ namespace HomeEconomy
             }
 
         }
-        public List<Task> GetMytask()
-        {
-            return this.mytask;
-        }
         public void addtolist(Task newtask)
         {
             this.mytask.Add(newtask);
@@ -133,11 +127,11 @@ namespace HomeEconomy
             {
                 connection.Open();
 
-                string query = "SELECT Id FROM Users WHERE Email = @email";
+                string query = "SELECT UserId FROM Users WHERE Username = @Username";
 
                 using (SqlCommand command = new SqlCommand(query, connection))
                 {
-                    command.Parameters.AddWithValue("@email", name);
+                    command.Parameters.AddWithValue("@Username", name);
 
                     object result = command.ExecuteScalar();
 
