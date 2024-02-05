@@ -16,3 +16,4 @@ namespace HomeEconomy.HomeEconomyDBTableAdapters {
     public partial class tasksTableAdapter {
     }
 }
+
