@@ -1,3 +1,9 @@
+# HomeEconomyproject- how to run
+_________________________________________________________________________________________________________________
+Achiya Ben Natan:213934599
+![image](https://github.com/LielYoash/HomeEconomy/assets/118170075/6486c302-a393-4c48-bb9f-f7eaf1150536)
+
+_________________________________________________________________________________________________________________
 # ASP.NET WebForms Frontend
 
 This project is the frontend component of an ASP.NET WebForms application.
