@@ -1,8 +1,10 @@
 # HomeEconomyproject- how to run
 _________________________________________________________________________________________________________________
 Achiya Ben Natan:213934599
-![image](https://github.com/LielYoash/HomeEconomy/assets/118170075/6486c302-a393-4c48-bb9f-f7eaf1150536)
-
+Yuval Musseri 213358039
+Liel Yoash:206477788
+Maor Berenstein:212305965
+Nevo Gadassi:325545887
 _________________________________________________________________________________________________________________
 # ASP.NET WebForms Frontend
 
