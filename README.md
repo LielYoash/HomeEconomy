@@ -17,13 +17,14 @@ Build the backend using your preferred build tool or IDE.
 In your ASP.NET WebForms frontend project, update the path to the bakelibrary.dll file in the relevant configuration. This file is used to communicate with the backend.
 
 Open the configuration file (Web.config or any other relevant configuration file) and look for a configuration setting related to the backend DLL or service. Update the path to point to the correct location of bakelibrary.dll.
+
 3.Running the Frontend
 Now that the backend is built and configured, you can run the frontend:
 
-Open the solution in Visual Studio.
+3.1Open the solution in Visual Studio.
 
-Build the solution.
+3.2Build the solution.
 
-Run the project.
+3.3Run the project.
 
 The frontend should now be able to communicate with the backend using the specified bakelibrary.dll.
